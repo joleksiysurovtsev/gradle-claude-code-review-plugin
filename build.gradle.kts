@@ -49,7 +49,6 @@ scmVersion {
     }
 }
 
-// Используем версию из git тегов
 project.version = scmVersion.version
 
 repositories {
