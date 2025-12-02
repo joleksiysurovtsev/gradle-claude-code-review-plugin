@@ -1,7 +1,10 @@
 # Claude AI Code Review Plugin
 
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/dev.surovtsev.claude-review?label=Gradle%20Plugin%20Portal&logo=gradle)](https://plugins.gradle.org/plugin/dev.surovtsev.claude-review)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/dev/surovtsev/claude-review/dev.surovtsev.claude-review.gradle.plugin/maven-metadata.xml.svg?colorB=007ec6&label=Plugin%20Portal)](https://plugins.gradle.org/plugin/dev.surovtsev.claude-review)
+[![CI](https://github.com/joleksiysurovtsev/claude-review-plugin/workflows/CI/badge.svg)](https://github.com/joleksiysurovtsev/claude-review-plugin/actions/workflows/ci.yml)
+[![Gradle](https://img.shields.io/badge/Gradle-7.0+-06A0CE?logo=gradle)](https://gradle.org)
+[![Java](https://img.shields.io/badge/Java-11%20%7C%2017%20%7C%2021-007396?logo=java)](https://www.java.com/)
 
 A Gradle plugin that automates code review using Claude AI. The plugin analyzes Git diffs and provides structured feedback about code quality, potential issues, and improvements in seconds.
 

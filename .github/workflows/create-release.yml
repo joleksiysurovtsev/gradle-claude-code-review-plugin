@@ -1,0 +1,141 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      publish_immediately:
+        description: 'Publish to Plugin Portal immediately'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Get current version
+        id: current_version
+        run: |
+          VERSION=$(./gradlew currentVersion -q | grep "Project version:" | sed 's/Project version: //')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📌 Current version: $VERSION"
+
+      - name: Create new version
+        id: new_version
+        run: |
+          case "${{ github.event.inputs.release_type }}" in
+            patch)
+              echo "Creating patch release..."
+              ./gradlew markNextVersion -Prelease.incrementer=incrementPatch -q
+              ;;
+            minor)
+              echo "Creating minor release..."
+              ./gradlew markNextVersion -Prelease.incrementer=incrementMinor -q
+              ;;
+            major)
+              echo "Creating major release..."
+              ./gradlew markNextVersion -Prelease.incrementer=incrementMajor -q
+              ;;
+          esac
+
+          NEW_VERSION=$(./gradlew currentVersion -q | grep "Project version:" | sed 's/Project version: //')
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "✨ New version: $NEW_VERSION"
+
+      - name: Update CHANGELOG
+        run: |
+          # Check if CHANGELOG.md exists
+          if [ ! -f CHANGELOG.md ]; then
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+          fi
+
+          # Add new version entry at the top (after the header)
+          TEMP_FILE=$(mktemp)
+          echo "# Changelog" > $TEMP_FILE
+          echo "" >> $TEMP_FILE
+          echo "## [${{ steps.new_version.outputs.new_version }}] - $(date +%Y-%m-%d)" >> $TEMP_FILE
+          echo "### Added" >> $TEMP_FILE
+          echo "- Automated release via GitHub Actions" >> $TEMP_FILE
+          echo "" >> $TEMP_FILE
+
+          # Append the rest of the file (skip the first line if it's the header)
+          tail -n +2 CHANGELOG.md >> $TEMP_FILE 2>/dev/null || true
+          mv $TEMP_FILE CHANGELOG.md
+
+          git add CHANGELOG.md
+          git commit -m "chore: update CHANGELOG for v${{ steps.new_version.outputs.new_version }}" || echo "No changes to commit"
+
+      - name: Create and push tag
+        run: |
+          git tag -a "v${{ steps.new_version.outputs.new_version }}" -m "Release v${{ steps.new_version.outputs.new_version }}"
+          git push origin "v${{ steps.new_version.outputs.new_version }}"
+
+      - name: Push to release branch
+        run: |
+          # Create or update release branch
+          git checkout -B release
+          git push origin release --force
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.new_version.outputs.new_version }}
+          release_name: Release v${{ steps.new_version.outputs.new_version }}
+          body: |
+            ## Release v${{ steps.new_version.outputs.new_version }}
+
+            ### Release Type
+            ${{ github.event.inputs.release_type }} release
+
+            ### Changes
+            See [CHANGELOG.md](https://github.com/joleksiysurovtsev/claude-review-plugin/blob/main/CHANGELOG.md) for details.
+
+            ### Installation
+            ```kotlin
+            plugins {
+                id("dev.surovtsev.claude-review") version "${{ steps.new_version.outputs.new_version }}"
+            }
+            ```
+          draft: false
+          prerelease: false
+
+      - name: Trigger immediate publish
+        if: github.event.inputs.publish_immediately == 'true'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: publish-plugin
+          client-payload: '{"version": "${{ steps.new_version.outputs.new_version }}"}'
