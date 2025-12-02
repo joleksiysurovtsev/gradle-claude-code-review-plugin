@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.surovtsev"
-
+project.version = scmVersion.version
 
 scmVersion {
     // Настройка тегов
@@ -48,7 +48,7 @@ scmVersion {
     }
 }
 
-project.version = scmVersion.version
+
 
 repositories {
     mavenCentral()
