@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="17c04217-9882-4bfd-9033-c29d00ebe032" name="Changes" comment="Add release automation workflows&#10;&#10;- Introduces `create-release.yml` for managing releases with inputs for release type and immediate publish options.&#10;- Adds `release-branch.yml` to handle validation, publishing, and GitHub release creation for the `release` branch.&#10;- Updates `publish.yml` to include additional checks for version availability and refined publishing steps.&#10;- Enhances `README.md` with new badges for CI, Gradle, and Java compatibility.">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/create-release.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/create-release.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/publish.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/publish.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/release-branch.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/release-branch.yml" afterDir="false" />
-    </list>
+    <list default="true" id="17c04217-9882-4bfd-9033-c29d00ebe032" name="Changes" comment="Update Gradle setup with cache configuration in workflows&#10;&#10;- Adds `cache-read-only` parameter to `setup-gradle` action in `publish.yml`, `create-release.yml`, and `release-branch.yml` for improved caching behavior." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,7 +55,6 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "develop",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/o.surovtsev/IdeaProjects/gradle-claude-code-review-plugin2",
@@ -177,7 +172,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1764706019563</updated>
-      <workItem from="1764706020945" duration="2654000" />
+      <workItem from="1764706020945" duration="3903000" />
     </task>
     <task id="LOCAL-00001" summary="Add detailed setup guide for Claude Review Plugin&#10;&#10;- Introduces `SETUP_GUIDE.md` with installation instructions and examples for various project types.&#10;- Covers configuration options, task usage, and CI/CD integration.&#10;- Includes troubleshooting tips for common issues.  &#10;- Removes unused imports in `build.gradle.kts`.">
       <option name="closed" value="true" />
@@ -195,7 +190,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764707811353</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Update Gradle setup with cache configuration in workflows&#10;&#10;- Adds `cache-read-only` parameter to `setup-gradle` action in `publish.yml`, `create-release.yml`, and `release-branch.yml` for improved caching behavior.">
+      <option name="closed" value="true" />
+      <created>1764708707116</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1764708707116</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -217,6 +220,7 @@
     <MESSAGE value="Remove unused Groovy import in build script" />
     <MESSAGE value="Add detailed setup guide for Claude Review Plugin&#10;&#10;- Introduces `SETUP_GUIDE.md` with installation instructions and examples for various project types.&#10;- Covers configuration options, task usage, and CI/CD integration.&#10;- Includes troubleshooting tips for common issues.  &#10;- Removes unused imports in `build.gradle.kts`." />
     <MESSAGE value="Add release automation workflows&#10;&#10;- Introduces `create-release.yml` for managing releases with inputs for release type and immediate publish options.&#10;- Adds `release-branch.yml` to handle validation, publishing, and GitHub release creation for the `release` branch.&#10;- Updates `publish.yml` to include additional checks for version availability and refined publishing steps.&#10;- Enhances `README.md` with new badges for CI, Gradle, and Java compatibility." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add release automation workflows&#10;&#10;- Introduces `create-release.yml` for managing releases with inputs for release type and immediate publish options.&#10;- Adds `release-branch.yml` to handle validation, publishing, and GitHub release creation for the `release` branch.&#10;- Updates `publish.yml` to include additional checks for version availability and refined publishing steps.&#10;- Enhances `README.md` with new badges for CI, Gradle, and Java compatibility." />
+    <MESSAGE value="Update Gradle setup with cache configuration in workflows&#10;&#10;- Adds `cache-read-only` parameter to `setup-gradle` action in `publish.yml`, `create-release.yml`, and `release-branch.yml` for improved caching behavior." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update Gradle setup with cache configuration in workflows&#10;&#10;- Adds `cache-read-only` parameter to `setup-gradle` action in `publish.yml`, `create-release.yml`, and `release-branch.yml` for improved caching behavior." />
   </component>
 </project>

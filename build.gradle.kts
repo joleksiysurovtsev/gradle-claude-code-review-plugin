@@ -18,11 +18,11 @@ scmVersion {
     }
 
     // Стратегия версионирования
-    versionIncrementer("incrementPatch") // По умолчанию patch релизы
+    // По умолчанию используется incrementPatch
 
     // Убираем SNAPSHOT для релизных веток
-    branchVersionIncrementer.put("release", "incrementPrerelease")
-    branchVersionIncrementer.put("release/.*", "incrementPrerelease")
+    // branchVersionIncrementer.put("release", "incrementPrerelease")
+    // branchVersionIncrementer.put("release/.*", "incrementPrerelease")
 
     // Версия для неотмеченных коммитов
     snapshotCreator { version, _ ->
