@@ -1,5 +1,3 @@
-import org.codehaus.groovy.tools.shell.util.Preferences.keys
-
 plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
