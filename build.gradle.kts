@@ -20,13 +20,12 @@ scmVersion {
     // Стратегия версионирования
     // По умолчанию используется incrementPatch
 
-    // Убираем SNAPSHOT для релизных веток
-    // branchVersionIncrementer.put("release", "incrementPrerelease")
-    // branchVersionIncrementer.put("release/.*", "incrementPrerelease")
-
     // Версия для неотмеченных коммитов
-    snapshotCreator { version, _ ->
-        if (version.contains("-")) {
+    snapshotCreator { version, position ->
+        // На ветке release не добавляем SNAPSHOT
+        if (position.branch == "release") {
+            version
+        } else if (version.contains("-")) {
             version
         } else {
             "$version-SNAPSHOT"

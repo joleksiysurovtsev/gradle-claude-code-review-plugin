@@ -34,8 +34,8 @@ jobs:
       - name: Get current version
         id: version
         run: |
-          # Get version without SNAPSHOT
-          VERSION=$(./gradlew properties -q | grep "^version:" | awk '{print $2}' | sed 's/-SNAPSHOT$//')
+          # Get version directly (no SNAPSHOT on release branch)
+          VERSION=$(./gradlew currentVersion -q | grep "Project version:" | sed 's/Project version: //')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Current version: $VERSION"
 
