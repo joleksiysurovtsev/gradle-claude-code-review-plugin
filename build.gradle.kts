@@ -11,13 +11,46 @@ group = "dev.surovtsev"
 
 
 scmVersion {
+    // Настройка тегов
     tag {
         prefix.set("v")
         versionSeparator.set("")
     }
-    versionIncrementer("incrementMinor")
+
+    // Стратегия версионирования
+    versionIncrementer("incrementPatch") // По умолчанию patch релизы
+
+    // Убираем SNAPSHOT для релизных веток
+    branchVersionIncrementer.put("release", "incrementPrerelease")
+    branchVersionIncrementer.put("release/.*", "incrementPrerelease")
+
+    // Версия для неотмеченных коммитов
+    snapshotCreator { version, _ ->
+        if (version.contains("-")) {
+            version
+        } else {
+            "$version-SNAPSHOT"
+        }
+    }
+
+    // Проверки
+    checks {
+        uncommittedChanges.set(false) // Разрешаем незакоммиченные изменения
+        aheadOfRemote.set(false) // Разрешаем локальные коммиты
+    }
+
+    // Хуки
+    hooks {
+        pre("fileUpdate", mapOf(
+            "file" to "README.md",
+            "pattern" to "version \"\\d+\\.\\d+\\.\\d+\"",
+            "replacement" to "version \"${version}\""
+        ))
+    }
 }
-version = scmVersion.version
+
+// Используем версию из git тегов
+project.version = scmVersion.version
 
 repositories {
     mavenCentral()
@@ -78,6 +111,51 @@ tasks.register("publishToLocal") {
         println("  plugins {")
         println("    id(\"dev.surovtsev.claude-review\") version \"${project.version}\"")
         println("  }")
+    }
+}
+
+// Таски для управления версиями
+tasks.register("nextPatchVersion") {
+    group = "release"
+    description = "Bumps to next patch version"
+    doLast {
+        exec {
+            commandLine("./gradlew", "release", "-Prelease.versionIncrementer=incrementPatch")
+        }
+    }
+}
+
+tasks.register("nextMinorVersion") {
+    group = "release"
+    description = "Bumps to next minor version"
+    doLast {
+        exec {
+            commandLine("./gradlew", "release", "-Prelease.versionIncrementer=incrementMinor")
+        }
+    }
+}
+
+tasks.register("nextMajorVersion") {
+    group = "release"
+    description = "Bumps to next major version"
+    doLast {
+        exec {
+            commandLine("./gradlew", "release", "-Prelease.versionIncrementer=incrementMajor")
+        }
+    }
+}
+
+tasks.register("showVersion") {
+    group = "release"
+    description = "Shows current project version"
+    doLast {
+        println("Current version: ${project.version}")
+        val isSnapshot = project.version.toString().contains("SNAPSHOT")
+        if (isSnapshot) {
+            println("⚠️ This is a SNAPSHOT version")
+        } else {
+            println("✅ This is a release version")
+        }
     }
 }
 

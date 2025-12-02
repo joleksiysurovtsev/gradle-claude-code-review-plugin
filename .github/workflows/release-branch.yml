@@ -10,6 +10,12 @@ on:
       - release
     types: [closed]
 
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  pull-requests: write
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -90,12 +96,10 @@ jobs:
 
       - name: Create GitHub Release
         if: steps.check_version.outputs.exists == 'false'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.version.outputs.version }}
-          release_name: Release v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
           body: |
             ## 🚀 Plugin v${{ steps.version.outputs.version }} Published
 
@@ -116,6 +120,9 @@ jobs:
             *This release was automatically created by GitHub Actions*
           draft: false
           prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Notify success
         if: steps.check_version.outputs.exists == 'false'
