@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +35,9 @@ jobs:
 
       - name: Get version
         id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "VERSION_NUMBER=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: actions/create-release@v1
@@ -48,7 +54,7 @@ jobs:
             ### Installation
             ```kotlin
             plugins {
-                id("dev.surovtsev.claude-review") version "${{ steps.get_version.outputs.VERSION }}"
+                id("dev.surovtsev.claude-review") version "${{ steps.get_version.outputs.VERSION_NUMBER }}"
             }
             ```
 
