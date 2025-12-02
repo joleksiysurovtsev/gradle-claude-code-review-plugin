@@ -1,0 +1,59 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build and test
+        run: |
+          ./gradlew test
+          ./gradlew validatePlugins
+          ./gradlew build
+
+      - name: Get version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          body: |
+            ## Claude AI Code Review Plugin ${{ steps.get_version.outputs.VERSION }}
+
+            ### Installation
+            ```kotlin
+            plugins {
+                id("dev.surovtsev.claude-review") version "${{ steps.get_version.outputs.VERSION }}"
+            }
+            ```
+
+            ### What's Changed
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+
+            ### Full Changelog
+            https://github.com/${{ github.repository }}/compare/${{ steps.get_version.outputs.PREVIOUS_TAG }}...${{ steps.get_version.outputs.VERSION }}
