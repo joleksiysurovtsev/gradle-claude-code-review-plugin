@@ -10,10 +10,14 @@ plugins {
 group = "dev.surovtsev"
 
 scmVersion {
+    // Начальная версия, если теги отсутствуют
+    versionCreator("versionWithBranch")
+
     // Настройка тегов
     tag {
         prefix.set("v")
         versionSeparator.set("")
+        initialVersion { _, _ -> "0.1.0" }
     }
 
     // Стратегия версионирования
