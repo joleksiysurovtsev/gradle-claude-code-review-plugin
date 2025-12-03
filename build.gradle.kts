@@ -46,8 +46,8 @@ dependencies {
 }
 
 gradlePlugin {
-    website.set("https://surovtsev.dev/")
-    vcsUrl.set("https://github.com/joleksiysurovtsev/claude-review-plugin")
+    website.set("https://surovtsev.dev/projects/claude-review-plugin")
+    vcsUrl.set("https://github.com/joleksiysurovtsev/gradle-claude-code-review-plugin")
 
     plugins {
         register("claudeReview") {
