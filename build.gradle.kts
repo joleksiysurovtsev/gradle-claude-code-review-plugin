@@ -36,15 +36,6 @@ scmVersion {
         uncommittedChanges.set(false) // Разрешаем незакоммиченные изменения
         aheadOfRemote.set(false) // Разрешаем локальные коммиты
     }
-
-    // Хуки
-    hooks {
-        pre("fileUpdate", mapOf(
-            "file" to "README.md",
-            "pattern" to "version \"\\d+\\.\\d+\\.\\d+\"",
-            "replacement" to "version \"${version}\""
-        ))
-    }
 }
 
 project.version = scmVersion.version
