@@ -10,9 +10,6 @@ plugins {
 group = "dev.surovtsev"
 
 scmVersion {
-    // Начальная версия, если теги отсутствуют
-    versionCreator("versionWithBranch")
-
     // Настройка тегов
     tag {
         prefix.set("v")
@@ -20,19 +17,9 @@ scmVersion {
         initialVersion { _, _ -> "0.1.0" }
     }
 
-    // Стратегия версионирования
-    // По умолчанию используется incrementPatch
-
     // Версия для неотмеченных коммитов
-    snapshotCreator { version, position ->
-        // На ветке release не добавляем SNAPSHOT
-        if (position.branch == "release") {
-            version
-        } else if (version.contains("-")) {
-            version
-        } else {
-            "$version-SNAPSHOT"
-        }
+    snapshotCreator { version, _ ->
+        "$version-SNAPSHOT"
     }
 
     // Проверки
@@ -42,7 +29,7 @@ scmVersion {
     }
 }
 
-project.version = scmVersion.version
+project.version = scmVersion.version.takeIf { it.isNotEmpty() } ?: "0.1.0-SNAPSHOT"
 
 
 
